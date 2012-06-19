@@ -17,6 +17,8 @@ package org.lesscss;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyNew;
@@ -83,7 +85,7 @@ public class LessCompilerTest {
     
     @Before
     public void setUp() throws Exception {
-        lessCompiler = new LessCompiler();
+        lessCompiler = spy(new LessCompiler());
         
         when(log.isDebugEnabled()).thenReturn(false);
         FieldUtils.writeField(lessCompiler, "log", log, true);
@@ -297,7 +299,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(inputFile, outputFile);
         
@@ -311,8 +313,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
     
     @Test
@@ -325,7 +326,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(inputFile, outputFile, true);
         
@@ -339,8 +340,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
     
     @Test
@@ -355,7 +355,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(inputFile, outputFile, false);
         
@@ -372,8 +372,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
     
     @Test
@@ -391,7 +390,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(inputFile, outputFile, false);
         
@@ -410,8 +409,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
     
     @Test
@@ -466,7 +464,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(lessSource, outputFile);
         
@@ -479,8 +477,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
 
     @Test
@@ -492,7 +489,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(lessSource, outputFile, true);
         
@@ -505,8 +502,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
     
     @Test
@@ -520,7 +516,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(lessSource, outputFile, false);
         
@@ -535,8 +531,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
     
     @Test
@@ -552,7 +547,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, null);
         
         lessCompiler.compile(lessSource, outputFile, false);
         
@@ -569,8 +564,7 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, null);
+        verify(lessCompiler).write(css, outputFile, null);
     }
     
     @Test
@@ -635,7 +629,7 @@ public class LessCompilerTest {
         
         when(scope.get("result", scope)).thenReturn(css);
         
-        mockStatic(FileUtils.class);
+        doNothing().when(lessCompiler).write(css, outputFile, "utf-8");
         
         lessCompiler.compile(inputFile, outputFile);
         
@@ -649,7 +643,6 @@ public class LessCompilerTest {
         
         verify(scope).get("result", scope);
         
-        verifyStatic();
-        FileUtils.writeStringToFile(outputFile, css, "utf-8");
+        verify(lessCompiler).write(css, outputFile, "utf-8");
     }
 }

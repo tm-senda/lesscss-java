@@ -17,11 +17,12 @@ package org.lesscss;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
@@ -323,8 +324,35 @@ public class LessCompiler {
      */
     public void compile(LessSource input, File output, boolean force) throws IOException, LessException {
         if (force || !output.exists() || output.lastModified() < input.getLastModifiedIncludingImports()) {
-            String data = compile(input);
-            FileUtils.writeStringToFile(output, data, encoding);
+            String css = compile(input);
+            write(css, output, encoding);
+        }
+    }
+    
+    /**
+     * Writes the CSS to the specified output <code>File</code>.
+     * <p>
+     * In order to cooperate with HOT RELOAD of some Application Servers(e.g, jetty), it writes in without a file locking. 
+     * </p>
+     * @param css The CSS compiled from <code>LessSource</code>.
+     * @param output The output <code>File</code> to write the CSS to.
+     * @param encoding The character encoding used for the output <code>File</code>.
+     * @throws IOException The output file cannot be written.
+     */
+    protected void write(String css, File output, String encoding) throws IOException {
+        RandomAccessFile file = null;
+        try {
+            file = new RandomAccessFile(output, "rw");
+            byte[] bytes = encoding != null ? css.getBytes(encoding) : css.getBytes();
+            file.setLength(bytes.length);
+            file.write(bytes);
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (IOException e) {
+                }
+            }
         }
     }
 }
